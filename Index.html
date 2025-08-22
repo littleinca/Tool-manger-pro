@@ -820,6 +820,14 @@
 
 <script>
     // Global state
+    <!-- Add Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+<script>
+    // Supabase Configuration - REPLACE WITH YOUR ACTUAL VALUES
+    const SUPABASE_URL = 'https://eowwsyxbcskiyixhubnz.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvd3dzeXhiY3NraXlpeGh1Ym56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU4OTY4NzMsImV4cCI6MjA3MTQ3Mjg3M30.GOeuQDRgI2X25N_Zx3RrcWBEy90_3Z0y8Z1OY-0z1Kw';
+    const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let currentUser = null;
     let userRole = null;
     let tools = [
