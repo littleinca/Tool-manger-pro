@@ -29,7 +29,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
         <button type="button" class="btn btn-warning" onclick="skipLogin()">Skip Login (Demo)</button>
-      </form>
 
       <div style="margin-top: 15px; font-size: 12px; color: #666;">
         <p><strong>Demo Accounts:</strong></p>
@@ -119,8 +118,22 @@
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
       updateUserInterface();
-      showAlert('Logged in as demo user!', 'success');
-    }
+      showAlert('Logged in as demo user!', 'function updateUserInterface() {
+  document.getElementById('current-user').textContent = currentUser;
+  document.getElementById('user-role').textContent = userRole.toUpperCase();
+
+  const adminTabs = document.getElementById('admin-tabs');
+  if (userRole === 'admin') {
+    adminTabs.classList.remove('hidden');
+  } else {
+    adminTabs.classList.add('hidden');
+  }
+
+  updateDropdowns();
+  updateInventory();
+  updateStats();
+  updateMaintenanceSchedule();
+}
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
