@@ -5,181 +5,104 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tool Manager Pro</title>
   <style>
-    /* keep your existing CSS */
+    /* ==== FULL ORIGINAL CSS ==== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh; padding: 10px;
+    }
+    .container { max-width: 420px; margin: 0 auto; background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); backdrop-filter: blur(10px);}
+    .header { text-align: center; margin-bottom: 20px; }
+    .header h1 { color: #333; font-size: 24px; font-weight: 700; margin-bottom: 5px; }
+    .header p { color: #666; font-size: 14px; }
+    .user-info { background: #f8f9fa; padding: 10px 15px; border-radius: 10px; margin-bottom: 15px;
+      display: flex; justify-content: space-between; align-items: center; }
+    .user-name { font-weight: 600; color: #333; }
+    .user-role { font-size: 12px; padding: 4px 8px; border-radius: 12px; background: #667eea; color: white; }
+    .logout-btn { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 8px;
+      cursor: pointer; font-size: 12px; }
+    .login-container { text-align: center; }
+    .tabs { display: flex; background: #f8f9fa; border-radius: 12px; margin-bottom: 15px; overflow: hidden; flex-wrap: wrap; }
+    .tab { flex: 1; padding: 10px 8px; text-align: center; background: none; border: none; cursor: pointer;
+      font-weight: 600; transition: all 0.3s ease; font-size: 12px; min-width: 70px; }
+    .tab.active { background: #667eea; color: white; transform: scale(1.02); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 14px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;
+      transition: all 0.3s ease; background: white; }
+    .form-group textarea { resize: vertical; height: 80px; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: #667eea; transform: translateY(-1px);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.2); }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 16px;
+      font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 8px; }
+    .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+    .btn-success { background: linear-gradient(135deg, #56ab2f, #a8e6cf); color: white; }
+    .btn-danger { background: linear-gradient(135deg, #dc3545, #f8d7da); color: white; }
+    .btn-warning { background: linear-gradient(135deg, #ffc107, #fff3cd); color: #333; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+    .btn-small { width: auto; padding: 8px 16px; font-size: 14px; margin: 0 5px 5px 0; }
+    .tool-list { max-height: 350px; overflow-y: auto; margin-top: 15px; }
+    .tool-item { display: flex; justify-content: space-between; align-items: center; padding: 15px;
+      margin-bottom: 10px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-left: 4px solid #667eea; transition: all 0.3s ease; }
+    .tool-item:hover { transform: translateX(3px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+    .tool-info { flex: 1; }
+    .tool-name { font-weight: 600; color: #333; margin-bottom: 3px; font-size: 14px; }
+    .tool-details { font-size: 11px; color: #666; margin-bottom: 2px; }
+    .tool-status { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;
+      text-align: center; min-width: 70px; }
+    .status-available { background: #d4edda; color: #155724; }
+    .status-checked-out { background: #f8d7da; color: #721c24; }
+    .status-maintenance { background: #fff3cd; color: #856404; }
+    .alert { padding: 12px; border-radius: 8px; margin-bottom: 15px; font-weight: 500; text-align: center;
+      animation: slideDown 0.3s ease; font-size: 14px; }
+    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .alert-info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); } }
+    .search-box, .filter-box { width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px;
+      font-size: 16px; margin-bottom: 10px; background: white; }
+    .search-box:focus, .filter-box:focus { outline: none; border-color: #667eea;
+      box-shadow: 0 5px 15px rgba(102,126,234,0.2); }
+    .stats { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+    .stat { flex: 1; background: white; padding: 12px; border-radius: 8px; text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 80px; }
+    .stat-number { font-size: 18px; font-weight: 700; color: #667eea; margin-bottom: 3px; }
+    .stat-label { font-size: 10px; color: #666; font-weight: 600; }
+    .camera-container { text-align: center; margin: 15px 0; }
+    .camera-preview { max-width: 100%; border-radius: 8px; margin-bottom: 10px; }
+    .barcode-scanner { background: #f8f9fa; border: 2px dashed #ccc; border-radius: 8px;
+      padding: 20px; text-align: center; margin-bottom: 15px; }
+    .maintenance-item { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px;
+      margin-bottom: 10px; border-radius: 0 8px 8px 0; }
+    .export-buttons { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+    .admin-actions { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    .admin-actions h3 { color: #333; margin-bottom: 10px; font-size: 16px; }
+    .quick-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); }
+    .modal-content { background-color: white; margin: 15% auto; padding: 20px; border-radius: 10px;
+      width: 90%; max-width: 400px; }
+    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .close:hover { color: black; }
+    .hidden { display: none; }
+    @media (max-width: 480px) {
+      .container { padding: 15px; }
+      .tabs { font-size: 10px; }
+      .tab { padding: 8px 4px; font-size: 10px; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-
-    <!-- Login Screen -->
-    <div id="login-screen" class="login-container">
-      <div class="header">
-        <h1>🔧 Tool Manager Pro</h1>
-        <p>Professional Tool Management System</p>
-      </div>
-
-      <form id="login-form">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" placeholder="Enter username" required>
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter password" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-        <button type="button" class="btn btn-warning" onclick="skipLogin()">Skip Login (Demo)</button>
-      </form>
-
-      <div style="margin-top: 15px; font-size: 12px; color: #666;">
-        <p><strong>Demo Accounts:</strong></p>
-        <p>user / user123</p>
-        <p>admin / admin123</p>
-        <p>Or use Skip Login!</p>
-      </div>
-    </div>
-
-    <!-- Main Application -->
-    <div id="main-app" class="hidden">
-      <div class="header">
-        <h1>🔧 Tool Manager Pro</h1>
-        <p>Professional Tool Management</p>
-      </div>
-
-      <div class="user-info">
-        <div>
-          <span class="user-name" id="current-user"></span>
-          <span class="user-role" id="user-role"></span>
-        </div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
-
-      <div class="tabs" id="main-tabs">
-        <button class="tab active" onclick="showTab(event,'checkout')">Check Out</button>
-        <button class="tab" onclick="showTab(event,'checkin')">Check In</button>
-        <button class="tab" onclick="showTab(event,'inventory')">Inventory</button>
-        <button class="tab" onclick="showTab(event,'maintenance')">Maintenance</button>
-        <button class="tab" onclick="showTab(event,'reports')">Reports</button>
-      </div>
-
-      <!-- Admin Tabs -->
-      <div class="tabs hidden" id="admin-tabs">
-        <button class="tab" onclick="showTab(event,'admin')">Admin</button>
-        <button class="tab" onclick="showTab(event,'users')">Users</button>
-        <button class="tab" onclick="showTab(event,'database')">Database</button>
-      </div>
-
-      <div id="alert-container"></div>
-
-      <!-- All your tab content (checkout, checkin, inventory, maintenance, reports, admin, users, database) -->
-      <!-- unchanged except JSON schema fixed -->
-
-      <div id="database" class="tab-content">
-        <div class="admin-actions">
-          <h3>Database Schema</h3>
-          <pre id="db-schema" style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 12px; overflow-x: auto;">
-{
-  "tools": [
-    {
-      "id": "number",
-      "name": "string",
-      "type": "string",
-      "model": "string",
-      "barcode": "string",
-      "status": "available|checked-out|maintenance",
-      "checkedOutBy": "string|null",
-      "checkedOutDate": "ISO date|null",
-      "project": "string|null",
-      "condition": "string",
-      "lastMaintenance": "ISO date",
-      "nextMaintenance": "ISO date",
-      "photos": ["array of base64 strings"],
-      "notes": "string"
-    }
-  ],
-  "users": [
-    {
-      "id": "number",
-      "username": "string",
-      "role": "user|admin",
-      "email": "string",
-      "active": "boolean"
-    }
-  ],
-  "transactions": [
-    {
-      "id": "number",
-      "toolId": "number",
-      "userId": "string",
-      "action": "checkout|checkin|maintenance",
-      "timestamp": "ISO date",
-      "project": "string",
-      "notes": "string"
-    }
-  ]
-}
-          </pre>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modals (photo modal, add tool modal) -->
-  <!-- unchanged -->
-
-  <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-
-  <script>
-    // Supabase config
-    const SUPABASE_URL = 'https://eowwsyxbcskiyixhubnz.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_KEY_HERE';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // === Your existing JS (users, tools, transactions, etc.) ===
-
-    // Fixed skipLogin
-    function skipLogin() {
-      currentUser = 'demo-user';
-      userRole = 'user';
-      document.getElementById('login-screen').classList.add('hidden');
-      document.getElementById('main-app').classList.remove('hidden');
-      updateUserInterface();   // ✅ now updates username/role/stats
-      showAlert('Logged in as demo user!', 'success');
-    }
-
-    // Fixed showTab
-    function showTab(event, tabName) {
-      const contents = document.querySelectorAll('.tab-content');
-      contents.forEach(c => c.classList.remove('active'));
-
-      const tabs = document.querySelectorAll('.tab');
-      tabs.forEach(t => t.classList.remove('active'));
-
-      const targetTab = document.getElementById(tabName);
-      if (targetTab) targetTab.classList.add('active');
-      if (event) event.target.classList.add('active');
-
-      updateDropdowns();
-      updateInventory();
-      updateStats();
-      if (tabName === 'maintenance') updateMaintenanceSchedule();
-      if (tabName === 'reports') generateReport();
-      if (tabName === 'users' && userRole === 'admin') updateUsersList();
-      if (tabName === 'database' && userRole === 'admin') checkDatabaseConnection();
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      checkAuthStatus();
-      document.getElementById('login-form').addEventListener('submit', handleLogin);
-      document.getElementById('checkout-form').addEventListener('submit', handleCheckout);
-      document.getElementById('checkin-form').addEventListener('submit', handleCheckin);
-      document.getElementById('add-tool-form').addEventListener('submit', handleAddTool);
-      document.getElementById('search-tools').addEventListener('input', updateInventory);
-      document.getElementById('filter-category').addEventListener('change', updateInventory);
-      document.getElementById('filter-status').addEventListener('change', updateInventory);
-    });
-  </script>
+  <!-- === LOGIN SCREEN, MAIN APP, MODALS, and JS from cleaned version === -->
+  <!-- ✅ Place corrected HTML + JS content here, as we built in the cleaned version -->
 </body>
 </html>
