@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tool Manager Pro</title>
   <style>
-    /* your CSS unchanged */
+    /* keep your existing CSS */
   </style>
 </head>
 <body>
@@ -29,6 +29,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
         <button type="button" class="btn btn-warning" onclick="skipLogin()">Skip Login (Demo)</button>
+      </form>
 
       <div style="margin-top: 15px; font-size: 12px; color: #666;">
         <p><strong>Demo Accounts:</strong></p>
@@ -70,13 +71,61 @@
 
       <div id="alert-container"></div>
 
-      <!-- (All your tab content sections stay unchanged: checkout, checkin, inventory, maintenance, reports, admin, users, database) -->
+      <!-- All your tab content (checkout, checkin, inventory, maintenance, reports, admin, users, database) -->
+      <!-- unchanged except JSON schema fixed -->
 
+      <div id="database" class="tab-content">
+        <div class="admin-actions">
+          <h3>Database Schema</h3>
+          <pre id="db-schema" style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 12px; overflow-x: auto;">
+{
+  "tools": [
+    {
+      "id": "number",
+      "name": "string",
+      "type": "string",
+      "model": "string",
+      "barcode": "string",
+      "status": "available|checked-out|maintenance",
+      "checkedOutBy": "string|null",
+      "checkedOutDate": "ISO date|null",
+      "project": "string|null",
+      "condition": "string",
+      "lastMaintenance": "ISO date",
+      "nextMaintenance": "ISO date",
+      "photos": ["array of base64 strings"],
+      "notes": "string"
+    }
+  ],
+  "users": [
+    {
+      "id": "number",
+      "username": "string",
+      "role": "user|admin",
+      "email": "string",
+      "active": "boolean"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "number",
+      "toolId": "number",
+      "userId": "string",
+      "action": "checkout|checkin|maintenance",
+      "timestamp": "ISO date",
+      "project": "string",
+      "notes": "string"
+    }
+  ]
+}
+          </pre>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Modals (photo modal, add tool modal) -->
-  <!-- unchanged except backticks removed -->
+  <!-- unchanged -->
 
   <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
@@ -87,11 +136,19 @@
     const SUPABASE_ANON_KEY = 'YOUR_KEY_HERE';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ===== Global state, users, tools, transactions, functions etc. =====
-    // ✅ Use handleLogin + skipLogin only (removed tryLogin)
-    // ✅ showTab(event, tabName) fixed to accept event
+    // === Your existing JS (users, tools, transactions, etc.) ===
 
-    // (All the JS you already have stays the same, except:)
+    // Fixed skipLogin
+    function skipLogin() {
+      currentUser = 'demo-user';
+      userRole = 'user';
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+      updateUserInterface();   // ✅ now updates username/role/stats
+      showAlert('Logged in as demo user!', 'success');
+    }
+
+    // Fixed showTab
     function showTab(event, tabName) {
       const contents = document.querySelectorAll('.tab-content');
       contents.forEach(c => c.classList.remove('active'));
@@ -111,29 +168,6 @@
       if (tabName === 'users' && userRole === 'admin') updateUsersList();
       if (tabName === 'database' && userRole === 'admin') checkDatabaseConnection();
     }
-
-    function skipLogin() {
-      currentUser = 'demo-user';
-      userRole = 'user';
-      document.getElementById('login-screen').classList.add('hidden');
-      document.getElementById('main-app').classList.remove('hidden');
-      updateUserInterface();
-      showAlert('Logged in as demo user!', 'function updateUserInterface() {
-  document.getElementById('current-user').textContent = currentUser;
-  document.getElementById('user-role').textContent = userRole.toUpperCase();
-
-  const adminTabs = document.getElementById('admin-tabs');
-  if (userRole === 'admin') {
-    adminTabs.classList.remove('hidden');
-  } else {
-    adminTabs.classList.add('hidden');
-  }
-
-  updateDropdowns();
-  updateInventory();
-  updateStats();
-  updateMaintenanceSchedule();
-}
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
