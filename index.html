@@ -102,7 +102,112 @@
   </style>
 </head>
 <body>
-  <!-- === LOGIN SCREEN, MAIN APP, MODALS, and JS from cleaned version === -->
-  <!-- ✅ Place corrected HTML + JS content here, as we built in the cleaned version -->
+  <div class="container">
+    <div id="login-screen" class="login-container">
+      <div class="header"><h1>ð§ Tool Manager Pro</h1><p>Professional Tool Management System</p></div>
+      <form id="login-form">
+        <div class="form-group"><label>Username</label><input type="text" id="username" required></div>
+        <div class="form-group"><label>Password</label><input type="password" id="password" required></div>
+        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="button" class="btn btn-warning" onclick="skipLogin()">Skip Login (Demo)</button>
+      </form>
+    </div>
+
+    <div id="main-app" class="hidden">
+      <div class="header"><h1>ð§ Tool Manager Pro</h1><p>Professional Tool Management</p></div>
+      <div class="user-info">
+        <div><span class="user-name" id="current-user"></span><span class="user-role" id="user-role"></span></div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+      <div class="tabs" id="main-tabs">
+        <button class="tab active" onclick="showTab(event,'inventory')">Inventory</button>
+      </div>
+      <div id="alert-container"></div>
+      <div id="inventory" class="tab-content active">
+        <div class="stats">
+          <div class="stat"><div class="stat-number" id="total-tools">0</div><div class="stat-label">Total Tools</div></div>
+          <div class="stat"><div class="stat-number" id="available-tools">0</div><div class="stat-label">Available</div></div>
+          <div class="stat"><div class="stat-number" id="checkedout-tools">0</div><div class="stat-label">Checked Out</div></div>
+        </div>
+        <div class="tool-list" id="tool-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentUser=null;
+    let userRole=null;
+    let tools=[
+      {id:1,name:"Hammer",type:"Hand Tool",status:"available"},
+      {id:2,name:"Cordless Drill",type:"Power Tool",status:"checked-out"},
+      {id:3,name:"Ladder",type:"Safety",status:"available"},
+      {id:4,name:"Circular Saw",type:"Power Tool",status:"maintenance"}
+    ];
+
+    function showAlert(msg,type='info'){
+      const c=document.getElementById('alert-container');
+      const el=document.createElement('div');
+      el.className=`alert alert-${type}`;
+      el.textContent=msg;
+      c.appendChild(el);
+      setTimeout(()=>el.remove(),3000);
+    }
+
+    function updateUserInterface(){
+      document.getElementById('current-user').textContent=currentUser;
+      document.getElementById('user-role').textContent=userRole.toUpperCase();
+      updateInventory();updateStats();
+    }
+
+    function skipLogin(){
+      currentUser='demo-user';userRole='user';
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+      updateUserInterface();
+      showAlert('Logged in as demo user!','success');
+    }
+
+    function logout(){
+      currentUser=null;userRole=null;
+      document.getElementById('main-app').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+    }
+
+    function showTab(e,t){document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+      document.getElementById(t).classList.add('active');
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+      if(e)e.target.classList.add('active');
+    }
+
+    function updateStats(){
+      document.getElementById('total-tools').textContent=tools.length;
+      document.getElementById('available-tools').textContent=tools.filter(t=>t.status==='available').length;
+      document.getElementById('checkedout-tools').textContent=tools.filter(t=>t.status==='checked-out').length;
+    }
+
+    function updateInventory(){
+      const list=document.getElementById('tool-list');list.innerHTML='';
+      tools.forEach(t=>{
+        const div=document.createElement('div');
+        div.className='tool-item';
+        div.innerHTML=`<div class="tool-info"><div class="tool-name">${t.name}</div><div class="tool-details">${t.type}</div></div><div class="tool-status status-${t.status}">${t.status}</div>`;
+        list.appendChild(div);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      document.getElementById('login-form').addEventListener('submit',e=>{
+        e.preventDefault();
+        const u=document.getElementById('username').value;
+        const p=document.getElementById('password').value;
+        if(u==='user'&&p==='user123'){currentUser=u;userRole='user';}
+        else if(u==='admin'&&p==='admin123'){currentUser=u;userRole='admin';}
+        else{showAlert('Invalid login','error');return;}
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        updateUserInterface();showAlert('Login successful!','success');
+      });
+    });
+  </script>
 </body>
 </html>
