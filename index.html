@@ -460,29 +460,96 @@
 </head>
 <body>
     <div class="container">
-        <!-- Login Screen -->
-        <div id="login-screen" class="login-container">
-            <div class="header">
-                <h1>🔧 Tool Manager Pro</h1>
-                <p>Professional Tool Management System</p>
-            </div>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" required placeholder="Enter username">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required placeholder="Enter password">
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-            <div style="margin-top: 15px; font-size: 12px; color: #666;">
-                <p><strong>Demo Accounts:</strong></p>
-                <p>User: user/user123</p>
-                <p>Admin: admin/admin123</p>
-            </div>
-        </div>
+        <!-- Replace your login form with this simplified version -->
+
+<div id="login-screen" class="login-container">
+    <div class="header">
+        <h1>🔧 Tool Manager Pro</h1>
+        <p>Professional Tool Management System</p>
+    </div>
+
+```
+<div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" placeholder="Enter username">
+</div>
+<div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter password">
+</div>
+
+<button type="button" class="btn btn-primary" onclick="tryLogin()">Login</button>
+<button type="button" class="btn btn-warning" onclick="skipLogin()">Skip Login (Demo)</button>
+
+<div style="margin-top: 15px; font-size: 12px; color: #666;">
+    <p><strong>Demo Accounts:</strong></p>
+    <p>user / user123</p>
+    <p>admin / admin123</p>
+    <p>Or use Skip Login!</p>
+</div>
+```
+
+</div>
+
+<script>
+// Add these simple functions
+function tryLogin() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    if (!username || !password) {
+        alert('Please enter username and password');
+        return;
+    }
+    
+    if ((username === 'user' && password === 'user123') || 
+        (username === 'admin' && password === 'admin123')) {
+        
+        // Login successful
+        currentUser = username;
+        userRole = username === 'admin' ? 'admin' : 'user';
+        
+        // Hide login screen, show main app
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        
+        // Update user interface
+        document.getElementById('current-user').textContent = currentUser;
+        document.getElementById('user-role').textContent = userRole.toUpperCase();
+        
+        if (userRole === 'admin') {
+            document.getElementById('admin-tabs').classList.remove('hidden');
+        }
+        
+        updateDropdowns();
+        updateInventory();
+        updateStats();
+        
+        alert('Login successful!');
+    } else {
+        alert('Invalid credentials! Try: user/user123 or admin/admin123');
+    }
+}
+
+function skipLogin() {
+    currentUser = 'demo-user';
+    userRole = 'user';
+    
+    // Hide login screen, show main app
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('main-app').classList.remove('hidden');
+    
+    // Update user interface
+    document.getElementById('current-user').textContent = currentUser;
+    document.getElementById('user-role').textContent = userRole.toUpperCase();
+    
+    updateDropdowns();
+    updateInventory();
+    updateStats();
+    
+    alert('Logged in as demo user!');
+}
+</script>
 
 ```
     <!-- Main Application -->
