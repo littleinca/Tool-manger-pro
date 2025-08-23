@@ -247,6 +247,77 @@
         display: none !important;
     }
 
+    .admin-section {
+        display: block;
+    }
+
+    .admin-section.hidden {
+        display: none;
+    }
+
+    .user-item {
+        background: white;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .user-info-item {
+        flex: 1;
+    }
+
+    .user-name-item {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 3px;
+    }
+
+    .user-details-item {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .user-role-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        text-align: center;
+        min-width: 60px;
+    }
+
+    .role-admin {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .role-user {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .btn-small {
+        width: auto;
+        padding: 8px 16px;
+        font-size: 14px;
+        margin: 0 5px 5px 0;
+    }
+
+    .recent-tool-item {
+        background: #e7f3ff;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        border-left: 3px solid #007bff;
+        font-size: 14px;
+        color: #0056b3;
+    }
+
     .stats {
         display: flex;
         gap: 10px;
@@ -327,6 +398,7 @@
             <button class="tab active" onclick="showTab('checkout')">Check Out</button>
             <button class="tab" onclick="showTab('checkin')">Check In</button>
             <button class="tab" onclick="showTab('inventory')">Inventory</button>
+            <button class="tab" onclick="showTab('admin')" id="admin-tab" style="display: none;">Admin</button>
         </div>
 
         <div id="alert-container"></div>
@@ -391,6 +463,122 @@
             
             <div class="tool-list" id="tool-inventory"></div>
         </div>
+
+        <!-- Admin Tab -->
+        <div id="admin" class="tab-content">
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 15px; color: #333;">Admin Panel</h3>
+                
+                <div class="tabs" style="margin-bottom: 15px;">
+                    <button class="tab active" onclick="showAdminSection('add-tools')">Add Tools</button>
+                    <button class="tab" onclick="showAdminSection('manage-users')">Manage Users</button>
+                    <button class="tab" onclick="showAdminSection('database')">Database</button>
+                </div>
+            </div>
+
+            <!-- Add Tools Section -->
+            <div id="add-tools" class="admin-section">
+                <h4 style="margin-bottom: 15px; color: #333;">Add New Tool</h4>
+                <div class="form-group">
+                    <label for="new-tool-name">Tool Name</label>
+                    <input type="text" id="new-tool-name" placeholder="e.g., Power Drill">
+                </div>
+                <div class="form-group">
+                    <label for="new-tool-type">Category</label>
+                    <select id="new-tool-type">
+                        <option value="">Select category...</option>
+                        <option value="Power Tools">Power Tools</option>
+                        <option value="Hand Tools">Hand Tools</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Measuring">Measuring</option>
+                        <option value="Safety">Safety</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="new-tool-model">Model/Brand</label>
+                    <input type="text" id="new-tool-model" placeholder="e.g., DeWalt DCD771">
+                </div>
+                <div class="form-group">
+                    <label for="new-tool-condition">Initial Condition</label>
+                    <select id="new-tool-condition">
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="fair">Fair</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="addNewTool()">Add Tool to Inventory</button>
+                
+                <div style="margin-top: 20px;">
+                    <h4 style="color: #333; margin-bottom: 10px;">Recently Added Tools</h4>
+                    <div id="recent-tools"></div>
+                </div>
+            </div>
+
+            <!-- Manage Users Section -->
+            <div id="manage-users" class="admin-section" style="display: none;">
+                <h4 style="margin-bottom: 15px; color: #333;">Add New User</h4>
+                <div class="form-group">
+                    <label for="new-username">Username</label>
+                    <input type="text" id="new-username" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="new-password">Password</label>
+                    <input type="password" id="new-password" placeholder="Enter password">
+                </div>
+                <div class="form-group">
+                    <label for="new-user-role">Role</label>
+                    <select id="new-user-role">
+                        <option value="user">User</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="new-user-email">Email (Optional)</label>
+                    <input type="email" id="new-user-email" placeholder="user@company.com">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="addNewUser()">Add User</button>
+                
+                <div style="margin-top: 20px;">
+                    <h4 style="color: #333; margin-bottom: 10px;">Current Users</h4>
+                    <div id="users-list"></div>
+                </div>
+            </div>
+
+            <!-- Database Section -->
+            <div id="database" class="admin-section" style="display: none;">
+                <h4 style="margin-bottom: 15px; color: #333;">Database Management</h4>
+                
+                <div class="stats" style="margin-bottom: 20px;">
+                    <div class="stat">
+                        <div class="stat-number" id="total-users">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="total-transactions">0</div>
+                        <div class="stat-label">Transactions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="system-uptime">100%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h5 style="margin-bottom: 10px; color: #333;">Quick Actions</h5>
+                    <button type="button" class="btn btn-warning" onclick="exportData()" style="margin-right: 10px; width: auto; padding: 10px 20px;">Export Data</button>
+                    <button type="button" class="btn btn-success" onclick="backupData()" style="margin-right: 10px; width: auto; padding: 10px 20px;">Backup Database</button>
+                    <button type="button" class="btn btn-primary" onclick="generateReport()" style="width: auto; padding: 10px 20px;">Generate Report</button>
+                </div>
+
+                <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; border-left: 4px solid #007bff;">
+                    <h5 style="margin-bottom: 10px; color: #0056b3;">System Information</h5>
+                    <p style="margin: 5px 0; color: #0056b3;"><strong>Database:</strong> Local Storage (Demo Mode)</p>
+                    <p style="margin: 5px 0; color: #0056b3;"><strong>Last Backup:</strong> <span id="last-backup">Never</span></p>
+                    <p style="margin: 5px 0; color: #0056b3;"><strong>Status:</strong> <span style="color: #28a745;">Online</span></p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -398,6 +586,13 @@
     // Simple global variables
     let currentUser = null;
     let userRole = null;
+    let users = [
+        { id: 1, username: 'user', password: 'user123', role: 'user', email: 'user@demo.com', active: true },
+        { id: 2, username: 'admin', password: 'admin123', role: 'admin', email: 'admin@demo.com', active: true }
+    ];
+    let transactions = [];
+    let nextToolId = 11;
+    let nextUserId = 3;
     let tools = [
         { id: 1, name: "Power Drill", type: "Power Tools", model: "DeWalt DCD771", status: "available", condition: "good", checkedOutBy: null, project: null },
         { id: 2, name: "Impact Driver", type: "Power Tools", model: "Milwaukee M18", status: "available", condition: "good", checkedOutBy: null, project: null },
@@ -453,9 +648,23 @@
         document.getElementById('current-user').textContent = currentUser;
         document.getElementById('user-role').textContent = userRole.toUpperCase();
         
+        // Show admin tab if user is admin
+        const adminTab = document.getElementById('admin-tab');
+        if (userRole === 'admin') {
+            adminTab.style.display = 'block';
+        } else {
+            adminTab.style.display = 'none';
+        }
+        
         updateDropdowns();
         updateInventory();
         updateStats();
+        
+        if (userRole === 'admin') {
+            updateUsersList();
+            updateRecentTools();
+            updateDatabaseStats();
+        }
     }
 
     // Logout function
@@ -486,6 +695,28 @@
         // Activate selected tab
         event.target.classList.add('active');
         document.getElementById(tabName).classList.add('active');
+        
+        // Update admin sections if needed
+        if (tabName === 'admin' && userRole === 'admin') {
+            updateUsersList();
+            updateRecentTools();
+            updateDatabaseStats();
+        }
+    }
+
+    // Admin section switching
+    function showAdminSection(sectionName) {
+        // Remove active from admin tabs
+        const adminTabs = document.querySelectorAll('#admin .tab');
+        adminTabs.forEach(tab => tab.classList.remove('active'));
+        
+        // Hide all admin sections
+        const sections = document.querySelectorAll('.admin-section');
+        sections.forEach(section => section.style.display = 'none');
+        
+        // Show selected section
+        document.getElementById(sectionName).style.display = 'block';
+        event.target.classList.add('active');
     }
 
     // Update dropdowns
@@ -681,6 +912,302 @@
         console.log('App loaded');
         updateStats();
     };
+
+    // ADMIN FUNCTIONS
+
+    // Add new tool
+    function addNewTool() {
+        if (userRole !== 'admin') {
+            showMessage('Admin access required', 'error');
+            return;
+        }
+
+        const name = document.getElementById('new-tool-name').value.trim();
+        const type = document.getElementById('new-tool-type').value;
+        const model = document.getElementById('new-tool-model').value.trim();
+        const condition = document.getElementById('new-tool-condition').value;
+
+        if (!name || !type || !model) {
+            showMessage('Please fill in all required fields', 'error');
+            return;
+        }
+
+        // Check if tool already exists
+        const existingTool = tools.find(t => 
+            t.name.toLowerCase() === name.toLowerCase() && 
+            t.model.toLowerCase() === model.toLowerCase()
+        );
+
+        if (existingTool) {
+            showMessage('A tool with this name and model already exists', 'error');
+            return;
+        }
+
+        // Create new tool
+        const newTool = {
+            id: nextToolId++,
+            name: name,
+            type: type,
+            model: model,
+            status: 'available',
+            condition: condition,
+            checkedOutBy: null,
+            project: null,
+            addedDate: new Date().toISOString(),
+            addedBy: currentUser
+        };
+
+        tools.push(newTool);
+
+        // Add transaction
+        transactions.push({
+            id: transactions.length + 1,
+            toolId: newTool.id,
+            userId: currentUser,
+            action: 'added',
+            timestamp: new Date().toISOString(),
+            notes: 'Tool added to inventory'
+        });
+
+        showMessage('Tool "' + name + '" added successfully!', 'success');
+
+        // Clear form
+        document.getElementById('new-tool-name').value = '';
+        document.getElementById('new-tool-type').value = '';
+        document.getElementById('new-tool-model').value = '';
+        document.getElementById('new-tool-condition').value = 'excellent';
+
+        // Update UI
+        updateDropdowns();
+        updateInventory();
+        updateStats();
+        updateRecentTools();
+    }
+
+    // Add new user
+    function addNewUser() {
+        if (userRole !== 'admin') {
+            showMessage('Admin access required', 'error');
+            return;
+        }
+
+        const username = document.getElementById('new-username').value.trim();
+        const password = document.getElementById('new-password').value;
+        const role = document.getElementById('new-user-role').value;
+        const email = document.getElementById('new-user-email').value.trim();
+
+        if (!username || !password) {
+            showMessage('Username and password are required', 'error');
+            return;
+        }
+
+        if (username.length < 3) {
+            showMessage('Username must be at least 3 characters', 'error');
+            return;
+        }
+
+        if (password.length < 6) {
+            showMessage('Password must be at least 6 characters', 'error');
+            return;
+        }
+
+        // Check if username already exists
+        const existingUser = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+        if (existingUser) {
+            showMessage('Username already exists', 'error');
+            return;
+        }
+
+        // Create new user
+        const newUser = {
+            id: nextUserId++,
+            username: username,
+            password: password,
+            role: role,
+            email: email || username + '@company.com',
+            active: true,
+            createdDate: new Date().toISOString(),
+            createdBy: currentUser
+        };
+
+        users.push(newUser);
+
+        showMessage('User "' + username + '" added successfully!', 'success');
+
+        // Clear form
+        document.getElementById('new-username').value = '';
+        document.getElementById('new-password').value = '';
+        document.getElementById('new-user-role').value = 'user';
+        document.getElementById('new-user-email').value = '';
+
+        // Update UI
+        updateUsersList();
+        updateDatabaseStats();
+    }
+
+    // Update users list
+    function updateUsersList() {
+        const usersList = document.getElementById('users-list');
+        if (!usersList) return;
+
+        usersList.innerHTML = '';
+
+        users.forEach(user => {
+            const userItem = document.createElement('div');
+            userItem.className = 'user-item';
+
+            const roleClass = user.role === 'admin' ? 'role-admin' : 'role-user';
+            
+            userItem.innerHTML = 
+                '<div class="user-info-item">' +
+                    '<div class="user-name-item">' + user.username + '</div>' +
+                    '<div class="user-details-item">' + user.email + '</div>' +
+                    '<div class="user-details-item">Created: ' + new Date(user.createdDate || Date.now()).toLocaleDateString() + '</div>' +
+                '</div>' +
+                '<div>' +
+                    '<div class="user-role-badge ' + roleClass + '">' + user.role.toUpperCase() + '</div>' +
+                    (user.username !== currentUser ? 
+                        '<button onclick="toggleUserStatus(' + user.id + ')" class="btn btn-warning btn-small" style="margin-top: 5px;">' + 
+                        (user.active ? 'Disable' : 'Enable') + '</button>' : '') +
+                '</div>';
+
+            usersList.appendChild(userItem);
+        });
+    }
+
+    // Toggle user active status
+    function toggleUserStatus(userId) {
+        if (userRole !== 'admin') {
+            showMessage('Admin access required', 'error');
+            return;
+        }
+
+        const user = users.find(u => u.id === userId);
+        if (!user) {
+            showMessage('User not found', 'error');
+            return;
+        }
+
+        if (user.username === currentUser) {
+            showMessage('Cannot disable your own account', 'error');
+            return;
+        }
+
+        user.active = !user.active;
+        const action = user.active ? 'enabled' : 'disabled';
+        
+        showMessage('User "' + user.username + '" ' + action, 'success');
+        updateUsersList();
+    }
+
+    // Update recent tools
+    function updateRecentTools() {
+        const recentTools = document.getElementById('recent-tools');
+        if (!recentTools) return;
+
+        // Get recently added tools (tools with addedDate)
+        const recentlyAdded = tools
+            .filter(t => t.addedDate)
+            .sort((a, b) => new Date(b.addedDate) - new Date(a.addedDate))
+            .slice(0, 5);
+
+        if (recentlyAdded.length === 0) {
+            recentTools.innerHTML = '<div style="color: #666; font-style: italic;">No recently added tools</div>';
+            return;
+        }
+
+        recentTools.innerHTML = '';
+        recentlyAdded.forEach(tool => {
+            const toolItem = document.createElement('div');
+            toolItem.className = 'recent-tool-item';
+            toolItem.innerHTML = 
+                '<strong>' + tool.name + '</strong> (' + tool.model + ') - ' + 
+                'Added: ' + new Date(tool.addedDate).toLocaleDateString();
+            recentTools.appendChild(toolItem);
+        });
+    }
+
+    // Update database stats
+    function updateDatabaseStats() {
+        const totalUsersEl = document.getElementById('total-users');
+        const totalTransactionsEl = document.getElementById('total-transactions');
+        const lastBackupEl = document.getElementById('last-backup');
+
+        if (totalUsersEl) totalUsersEl.textContent = users.length;
+        if (totalTransactionsEl) totalTransactionsEl.textContent = transactions.length;
+        if (lastBackupEl) lastBackupEl.textContent = localStorage.getItem('lastBackup') || 'Never';
+    }
+
+    // Export data
+    function exportData() {
+        const data = {
+            tools: tools,
+            users: users.map(u => ({...u, password: '[HIDDEN]'})), // Hide passwords in export
+            transactions: transactions,
+            exportDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(data, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = 'tool_manager_data_' + new Date().toISOString().split('T')[0] + '.json';
+        link.click();
+
+        showMessage('Data exported successfully!', 'success');
+    }
+
+    // Backup data
+    function backupData() {
+        try {
+            const backupData = {
+                tools: tools,
+                users: users,
+                transactions: transactions,
+                backupDate: new Date().toISOString()
+            };
+
+            // Save to localStorage as backup
+            localStorage.setItem('toolManagerBackup', JSON.stringify(backupData));
+            localStorage.setItem('lastBackup', new Date().toLocaleDateString());
+
+            showMessage('Data backed up successfully!', 'success');
+            updateDatabaseStats();
+        } catch (error) {
+            showMessage('Backup failed: ' + error.message, 'error');
+        }
+    }
+
+    // Generate report
+    function generateReport() {
+        const report = {
+            summary: {
+                totalTools: tools.length,
+                availableTools: tools.filter(t => t.status === 'available').length,
+                checkedOutTools: tools.filter(t => t.status === 'checked-out').length,
+                totalUsers: users.length,
+                activeUsers: users.filter(u => u.active).length,
+                totalTransactions: transactions.length
+            },
+            recentActivity: transactions.slice(-10).reverse(),
+            toolsByCategory: tools.reduce((acc, tool) => {
+                acc[tool.type] = (acc[tool.type] || 0) + 1;
+                return acc;
+            }, {}),
+            generatedDate: new Date().toISOString()
+        };
+
+        const reportStr = JSON.stringify(report, null, 2);
+        const reportBlob = new Blob([reportStr], {type: 'application/json'});
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(reportBlob);
+        link.download = 'tool_manager_report_' + new Date().toISOString().split('T')[0] + '.json';
+        link.click();
+
+        showMessage('Report generated and downloaded!', 'success');
+    }
 </script>
 ```
 
